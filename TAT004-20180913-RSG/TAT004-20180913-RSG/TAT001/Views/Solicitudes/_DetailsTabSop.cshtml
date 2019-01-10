@@ -81,6 +81,8 @@
 
                                 //LEJ 13.07.2018-----------------------------------------------------
                                 $('.btnEnviar').on("click", function (e) {
+                                    e.target.disabled = true;
+                                    document.getElementById("loader").style.display = "flex"; //LEJ 13.07.2018
                                     var msg = "";
                                     var ban = 0;
                                     if (document.getElementById("file_carta").files.length > 0) {
@@ -91,7 +93,8 @@
                                                 displayLength: 1000000,
                                                 html: '<span style="padding-right:15px;"><i class="material-icons yellow-text">info</i></span> ' + msg
                                                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
-                                            });
+                                             });
+                                             e.target.disabled = false;
                                             return;
                                          } else if (ligada()) {
                                              ban++;
@@ -119,6 +122,7 @@
                                                     + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
                                             });
                                             document.getElementById("loader").style.display = "none"; //LEJ 13.07.2018
+                                            e.target.disabled = false;
                                         }
                                     } else {
                                         msg = "Favor de subir archivo";
@@ -129,7 +133,9 @@
                                                 + '<button class="btn-small btn-flat toast-action" onclick="dismiss(\'validarDis\')">Aceptar</button>'
                                         });
                                         document.getElementById("loader").style.display = "none"; //LEJ 13.07.2018
+                                        e.target.disabled = false;
                                     }
+                                    
                                 });
 
                                 function dismiss(classe) {

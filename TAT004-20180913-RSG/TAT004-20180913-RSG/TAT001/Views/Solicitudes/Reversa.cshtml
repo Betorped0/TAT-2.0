@@ -21,7 +21,7 @@
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close btn-flat" id="btn_no">NO</a>
-        <a href="@Url.Action("Reversar",new { id = Model.NUM_DOC, tsol=Model.TSOL.TSOLR})" class="btn-flat">SI</a>
+        <a href="@Url.Action("Reversar",new { id = Model.NUM_DOC, tsol=Model.TSOL.TSOLR})" class="btn-flat" onclick="clickAndDisable(this);">SI</a>
     </div>
 </div>
 <div id="modal2" class="modal" hidden>

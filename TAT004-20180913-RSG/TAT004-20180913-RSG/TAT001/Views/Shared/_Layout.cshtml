@@ -130,21 +130,21 @@
         <li class='no-padding'>
             <ul class='collapsible collapsible-accordion'>
                 @foreach (TAT001.Entities.CARPETAV c in ViewBag.carpetas)
-            {
-                if (c.URL.Equals(""))
                 {
-                    foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                    if (c.URL.Equals(""))
                     {
-                        if (c.ID.Equals(p.CARPETA_ID))
+                        foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
                         {
-                            if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                            if (c.ID.Equals(p.CARPETA_ID))
                             {
-                                <li class='bold active'><a href='#'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
-                        }
-                        else
-                        {
-                            string[] uu = p.PAGINA_URL.Split('/');
-                            <li class='bold'><a href='@Url.Action(uu[1], uu[0])'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
+                                if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                                {
+                                    <li class='bold active'><a href='#'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
+                                }
+                                else
+                                {
+                                    string[] uu = p.PAGINA_URL.Split('/');
+                                    <li class='bold'><a href='@Url.Action(uu[1], uu[0])'><i class='material-icons'>@p.ICON</i>@p.TXT50</a></li>
                                 }
                             }
                         }
@@ -152,197 +152,197 @@
                     else
                     {
                         @*if (ViewBag.carpeta_r.Equals(c.ID))
-                        {
-
-                <li class='bold active'>
-                    <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
-                    <div class='collapsible-body'>
-                        <ul>
-                            @{bool submenu1 = true;
-                                foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                                {
-                                    if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500)
                                     {
-                                        if (c.ID.Equals(p.CARPETA_ID))
-                                        {
-                                            if (submenu1)
+
+                            <li class='bold active'>
+                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
+                                <div class='collapsible-body'>
+                                    <ul>
+                                        @{bool submenu1 = true;
+                                            foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
                                             {
-                                                <li>
-                                                    <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'></i>Mantenimiento Mayor</a>
-                                                    <div class='collapsible-body'>
-                                                        <ul class="collapsible" data-collapsible="accordion" id="mantomayor"></ul>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'></i>Mantenimiento Menor</a>
-                                                    <div class='collapsible-body'>
-                                                        <ul class="collapsible" data-collapsible="accordion"></ul>
-                                                    </div>
-                                                </li>
-                                                submenu1 = false;
-                                            }
-                                            if (p.PAGINA_ID == 530 || p.PAGINA_ID == 601 || p.PAGINA_ID == 631 || p.PAGINA_ID == 661)
-                                            {
-                                                <li class="mantomayor"><a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a></li>
-                                                continue;
-                                            }
-                                            if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
-                                            {
-                                                ////////DRS 26.09.18//////
-                                                <li class="active">
-                                                    <a style="color: rgba(0, 0, 0, 0.87);
-                                                font-family: Tahoma;
-                                                text-transform: uppercase;
-                                                display: block;
-                                               font-size: 11px;
-                                                font-weight: 500;
-                                                height: 48px;
-                                                line-height: 48px;
-                                                padding: 0 32px;
-                                                text-indent: 1cm;" href='@Url.Action(p.PAGINA_URL, c.URL)'>@p.TXT50</a>
-                                            </li>
-                                            }
-                                            else
-                                            {
-                                                ////////DRS 26.09.18//////
-                                            <li>
-                                                <a style="color: rgba(0, 0, 0, 0.87);
-                                                font-family: Tahoma;
-                                                text-transform: uppercase;
-                                                display: block;
-                                                font-size: 11px;
-                                                font-weight: 500;
-                                                height: 48px;
-                                                line-height: 48px;
-                                                padding: 0 32px;
-                                                text-indent: 1cm;" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
-                                            </li>
+                                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500)
+                                                {
+                                                    if (c.ID.Equals(p.CARPETA_ID))
+                                                    {
+                                                        if (submenu1)
+                                                        {
+                                                            <li>
+                                                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'></i>Mantenimiento Mayor</a>
+                                                                <div class='collapsible-body'>
+                                                                    <ul class="collapsible" data-collapsible="accordion" id="mantomayor"></ul>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'></i>Mantenimiento Menor</a>
+                                                                <div class='collapsible-body'>
+                                                                    <ul class="collapsible" data-collapsible="accordion"></ul>
+                                                                </div>
+                                                            </li>
+                                                            submenu1 = false;
+                                                        }
+                                                        if (p.PAGINA_ID == 530 || p.PAGINA_ID == 601 || p.PAGINA_ID == 631 || p.PAGINA_ID == 661)
+                                                        {
+                                                            <li class="mantomayor"><a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a></li>
+                                                            continue;
+                                                        }
+                                                        if (ViewBag.pagina_r.Equals(p.PAGINA_ID))
+                                                        {
+                                                            ////////DRS 26.09.18//////
+                                                            <li class="active">
+                                                                <a style="color: rgba(0, 0, 0, 0.87);
+                                                            font-family: Tahoma;
+                                                            text-transform: uppercase;
+                                                            display: block;
+                                                           font-size: 11px;
+                                                            font-weight: 500;
+                                                            height: 48px;
+                                                            line-height: 48px;
+                                                            padding: 0 32px;
+                                                            text-indent: 1cm;" href='@Url.Action(p.PAGINA_URL, c.URL)'>@p.TXT50</a>
+                                                        </li>
+                                                        }
+                                                        else
+                                                        {
+                                                            ////////DRS 26.09.18//////
+                                                        <li>
+                                                            <a style="color: rgba(0, 0, 0, 0.87);
+                                                            font-family: Tahoma;
+                                                            text-transform: uppercase;
+                                                            display: block;
+                                                            font-size: 11px;
+                                                            font-weight: 500;
+                                                            height: 48px;
+                                                            line-height: 48px;
+                                                            padding: 0 32px;
+                                                            text-indent: 1cm;" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
+                                                        </li>
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
-                                        }
-                                    }
-                                }
-                            </ul>
-                    </div>
-                </li>
-                        }*@
+                                        </ul>
+                                </div>
+                            </li>
+                                    }*@
                         //else
                         //{
 
-            <li class='bold'>
-                <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
-                <div class='collapsible-body'>
-                    <ul class="collapsible" data-collapsible="accordion">
-                        @{bool submenucatalogos = true, submenuayuda = true;
-                            foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
-                            {
-                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && submenucatalogos)
-                                {
-                                    var manttos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento != null).Select(t => t.Mantenimiento).Distinct();
-                                    //var manttos = new TAT001Entities().Grupoes.Where(t=>t.SPRAS_ID==p.SPRAS_ID).ToList();
-                                    foreach (var manto in manttos.OrderBy(t => t.Value))
-                                    {
-                                        var mant = new TAT001Entities().Grupoes.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == manto.Value).SingleOrDefault();
-                                        <li class="collection">
-                                            <a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
-                                            <div class='collapsible-body collapsible-body1'>
-                                                <ul id='@mant.Grupo_ID@mant.SPRAS_ID' class="collapsible" data-collapsible="accordion">
-                                                    @{ var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == mant.Grupo_ID).Select(t => t.Grupo).Distinct();
-                                                        foreach (var g in grupos.OrderBy(t => t.Value))
-                                                        {
-                                                            var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
-                                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).OrderBy(t=>t.Orden).ToList();
-                                                            <li class="collection">
-                                                                @if (paginasxgrupo.Count > 1)
-                                                                {
-                                                                    <a class='collapsible-header' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
-                                                                    <div class='collapsible-body'>
-
-                                                                        <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
-                                                                            @foreach (var pa in paginasxgrupo)
+                        <li class='bold'>
+                            <a class='collapsible-header waves-effect waves-teal'><i class='material-icons'>@c.ICON</i>@c.TXT50</a>
+                            <div class='collapsible-body'>
+                                <ul class="collapsible" data-collapsible="accordion">
+                                    @{bool submenucatalogos = true, submenuayuda = true;
+                                        foreach (TAT001.Entities.PAGINAV p in ViewBag.permisos)
+                                        {
+                                            if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && submenucatalogos)
+                                            {
+                                                var manttos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento != null).Select(t => t.Mantenimiento).Distinct();
+                                                //var manttos = new TAT001Entities().Grupoes.Where(t=>t.SPRAS_ID==p.SPRAS_ID).ToList();
+                                                foreach (var manto in manttos.OrderBy(t => t.Value))
+                                                {
+                                                    var mant = new TAT001Entities().Grupoes.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == manto.Value).SingleOrDefault();
+                                                    <li class="collection">
+                                                        <a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
+                                                        <div class='collapsible-body collapsible-body1'>
+                                                            <ul id='@mant.Grupo_ID@mant.SPRAS_ID' class="collapsible" data-collapsible="accordion">
+                                                                @{ var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == mant.Grupo_ID).Select(t => t.Grupo).Distinct();
+                                                                    foreach (var g in grupos.OrderBy(t => t.Value))
+                                                                    {
+                                                                        var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
+                                                                        var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).OrderBy(t => t.Orden).ToList();
+                                                                        <li class="collection">
+                                                                            @if (paginasxgrupo.Count > 1)
                                                                             {
-                                                                                <li class="classcatalogos">
-                                                                                    <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
-                                                                                </li>
+                                                                                <a class='collapsible-header' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
+                                                                                <div class='collapsible-body'>
+
+                                                                                    <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
+                                                                                        @foreach (var pa in paginasxgrupo)
+                                                                                        {
+                                                                                            <li class="classcatalogos">
+                                                                                                <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
+                                                                                            </li>
+                                                                                        }
+                                                                                    </ul>
+                                                                                </div>
                                                                             }
-                                                                        </ul>
-                                                                    </div>
+                                                                            else
+                                                                            {
+                                                                                <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
+                                                                            }
+                                                                        </li>
+                                                                    }
                                                                 }
-                                                                else
-                                                                {
-                                                                    <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
-                                                                }
-                                                            </li>
-                                                        }
-                                                    }
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        submenucatalogos = false;
-                                    }
-                                }
-                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && p.Grupo == null && submenucatalogos == false)
-                                {
-                                    <li>
-                                        <a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
-                                    </li>
-                                }
-                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 1200 && submenuayuda)
-                                {
-                                    //var manttos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == 5).Select(t => t.Mantenimiento).Distinct();
-                                    //var manttos = new TAT001Entities().Grupoes.Where(t=>t.SPRAS_ID==p.SPRAS_ID).ToList();
-                                    //foreach (var manto in manttos.OrderBy(t => t.Value))
-                                    //{
-                                        //var mant = new TAT001Entities().Grupoes.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == manto.Value).SingleOrDefault();
-                                        //<li class="collection">
-                                            //<a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
-                                            //<div class='collapsible-body collapsible-body1'>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                    submenucatalogos = false;
+                                                }
+                                            }
+                                            if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 500 && p.Grupo == null && submenucatalogos == false)
+                                            {
+                                                <li>
+                                                    <a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
+                                                </li>
+                                            }
+                                            if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 1200 && submenuayuda)
+                                            {
+                                                //var manttos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Mantenimiento == 5).Select(t => t.Mantenimiento).Distinct();
+                                                //var manttos = new TAT001Entities().Grupoes.Where(t=>t.SPRAS_ID==p.SPRAS_ID).ToList();
+                                                //foreach (var manto in manttos.OrderBy(t => t.Value))
+                                                //{
+                                                //var mant = new TAT001Entities().Grupoes.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == manto.Value).SingleOrDefault();
+                                                //<li class="collection">
+                                                //<a class='collapsible-header collection-item' href='#' data-target='@mant.Grupo_ID@mant.SPRAS_ID'>@mant.Descripcion<i class="material-icons right">details</i></a>
+                                                //<div class='collapsible-body collapsible-body1'>
                                                 //<ul id='@mant.Grupo_ID@mant.SPRAS_ID' class="collapsible" data-collapsible="accordion">
-                                                     var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo >= 20 && t.Grupo<25).Select(t => t.Grupo).Distinct();
-                                                        foreach (var g in grupos.OrderBy(t => t.Value))
+                                                var grupos = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo >= 20 && t.Grupo < 25).Select(t => t.Grupo).Distinct();
+                                                foreach (var g in grupos.OrderBy(t => t.Value))
+                                                {
+                                                    var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
+                                                    var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).ToList();
+                                                    <li class="collection">
+                                                        @if (paginasxgrupo.Count > 1)
                                                         {
-                                                            var grupo = new TAT001Entities().GrupoCats.Where(t => t.SPRAS_ID == p.SPRAS_ID && t.Grupo_ID == g).SingleOrDefault();
-                                                            var paginasxgrupo = new List<PAGINAV>(ViewBag.permisos).Where(t => t.Grupo == g).ToList();
-                                                            <li class="collection">
-                                                                @if (paginasxgrupo.Count > 1)
-                                                                {
-                                                                    <a class='collapsible-header collection-item' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
-                                                                    <div class='collapsible-body'>
+                                                            <a class='collapsible-header collection-item' href='#' data-target='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()'>@grupo.Descripcion<i class="material-icons right">arrow_drop_down</i></a>
+                                                            <div class='collapsible-body'>
 
-                                                                        <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
-                                                                            @foreach (var pa in paginasxgrupo)
-                                                                            {
-                                                                                <li class="classcatalogos">
-                                                                                    <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
-                                                                                </li>
-                                                                            }
-                                                                        </ul>
-                                                                    </div>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
-                                                                }
-                                                            </li>
+                                                                <ul id='@grupo.Grupo_ID@grupo.Descripcion.TrimEnd()' class="collapsible" data-collapsible="accordion">
+                                                                    @foreach (var pa in paginasxgrupo)
+                                                                    {
+                                                                        <li class="classcatalogos">
+                                                                            <a href="@Url.Action(pa.PAGINA_URL, c.URL)">@pa.TXT50</a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
                                                         }
-                                                    
+                                                        else
+                                                        {
+                                                            <a href="@Url.Action(paginasxgrupo.First().PAGINA_URL, c.URL)">@paginasxgrupo.First().TXT50</a>
+                                                        }
+                                                    </li>
+                                                }
+
                                                 //</ul>
-                                            //</div>
-                                        //</li>
-                                        submenuayuda = false;
-                                    //}
-                                }
-                                if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 1200 && p.Grupo == null && submenuayuda == false)
-                                {
-                                    <li>
-                                        <a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
-                                    </li>
-                                }
-                                else if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID != 500 && c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID != 1200)
-                                {
-                                    ////////DRS 26.09.18//////
-                                    <li>
-                                        <a style="color: rgba(0, 0, 0, 0.87);
+                                                //</div>
+                                                //</li>
+                                                submenuayuda = false;
+                                                //}
+                                            }
+                                            if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID == 1200 && p.Grupo == null && submenuayuda == false)
+                                            {
+                                                <li>
+                                                    <a class="classcatalogos" href="@Url.Action(p.PAGINA_URL, c.URL)">@p.TXT50</a>
+                                                </li>
+                                            }
+                                            else if (c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID != 500 && c.ID.Equals(p.CARPETA_ID) && p.CARPETA_ID != 1200)
+                                            {
+                                                ////////DRS 26.09.18//////
+                                                <li>
+                                                    <a style="color: rgba(0, 0, 0, 0.87);
                                                 font-family: Tahoma;
                                                 text-transform: uppercase;
                                                 display: block;
@@ -355,95 +355,95 @@
                                             </li>
                                         }
                                         @*<li class="bold">
-                            <a class="collapsible-header">
-                                <span class="nav-text">Second level child</span>
-                                <i class="material-icons">keyboard_arrow_right</i>
-                            </a>
-                            <div class="collapsible-body" style="display: block;">
-                                <ul>
-                                    <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
-                                    <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
-                                </ul>
-                            </div>
-                        </li>*@
+                                                <a class="collapsible-header">
+                                                    <span class="nav-text">Second level child</span>
+                                                    <i class="material-icons">keyboard_arrow_right</i>
+                                                </a>
+                                                <div class="collapsible-body" style="display: block;">
+                                                    <ul>
+                                                        <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
+                                                        <li><a href="ui-basic-buttons.html"><i class="material-icons">keyboard_arrow_right</i><span>Third level</span></a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>*@
 
                                     }
-                        }
-                    </ul>
-                </div>
-            </li>
-    //}
-}
-}
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                        //}
+                    }
+                }
 
 
             </ul>
         </li>
         @*<li class="no-padding">
-            <ul class="collapsible" data-collapsible="accordion">
-                <li class="bold">
-                    <a class="collapsible-header waves-effect waves-cyan">
-                        <i class="material-icons">photo_filter</i>
-                        <span class="nav-text">Menu Levels</span>
-                    </a>
-                    <div class="collapsible-body" style="display: block;">
-                        <ul class="collapsible" data-collapsible="accordion">
-                            <li>
-                                <a href="ui-basic-buttons.html">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span>Second level</span>
-                                </a>
-                            </li>
-                            <li class="bold">
-                                <a class="collapsible-header waves-effect waves-cyan">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span class="nav-text">Second level child</span>
-                                </a>
-                                <div class="collapsible-body" style="display: block;">
-                                    <ul class="collapsible" data-collapsible="accordion">
-                                        <li>
-                                            <a href="ui-basic-buttons.html">
-                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                <span>Third level</span>
-                                            </a>
-                                        </li>
-                                        <li class="bold">
-                                            <a class="collapsible-header waves-effect waves-cyan">
-                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                <span class="nav-text">Third level child</span>
-                                            </a>
-                                            <div class="collapsible-body" style="display: block;">
-                                                <ul class="collapsible" data-collapsible="accordion">
-                                                    <li>
-                                                        <a href="ui-basic-buttons.html">
-                                                            <i class="material-icons">keyboard_arrow_right</i>
-                                                            <span>Forth level</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="ui-extended-buttons.html">
-                                                            <i class="material-icons">keyboard_arrow_right</i>
-                                                            <span>Forth level</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>*@
+                <ul class="collapsible" data-collapsible="accordion">
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">photo_filter</i>
+                            <span class="nav-text">Menu Levels</span>
+                        </a>
+                        <div class="collapsible-body" style="display: block;">
+                            <ul class="collapsible" data-collapsible="accordion">
+                                <li>
+                                    <a href="ui-basic-buttons.html">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                        <span>Second level</span>
+                                    </a>
+                                </li>
+                                <li class="bold">
+                                    <a class="collapsible-header waves-effect waves-cyan">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                        <span class="nav-text">Second level child</span>
+                                    </a>
+                                    <div class="collapsible-body" style="display: block;">
+                                        <ul class="collapsible" data-collapsible="accordion">
+                                            <li>
+                                                <a href="ui-basic-buttons.html">
+                                                    <i class="material-icons">keyboard_arrow_right</i>
+                                                    <span>Third level</span>
+                                                </a>
+                                            </li>
+                                            <li class="bold">
+                                                <a class="collapsible-header waves-effect waves-cyan">
+                                                    <i class="material-icons">keyboard_arrow_right</i>
+                                                    <span class="nav-text">Third level child</span>
+                                                </a>
+                                                <div class="collapsible-body" style="display: block;">
+                                                    <ul class="collapsible" data-collapsible="accordion">
+                                                        <li>
+                                                            <a href="ui-basic-buttons.html">
+                                                                <i class="material-icons">keyboard_arrow_right</i>
+                                                                <span>Forth level</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="ui-extended-buttons.html">
+                                                                <i class="material-icons">keyboard_arrow_right</i>
+                                                                <span>Forth level</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>*@
     </ul>
     <script>
-var elems = document.querySelectorAll('.collapsible');
+        var elems = document.querySelectorAll('.collapsible');
         var instances = M.Collapsible.init(elems, []);
 
         $(".dropdown-trigger").dropdown({ hover: false, coverTrigger: false, aligment: 'right' });
-        $(".dropdown-button").dropdown({ hover: true});
+        $(".dropdown-button").dropdown({ hover: true });
 
     </script>
     <style>
@@ -459,9 +459,11 @@ var elems = document.querySelectorAll('.collapsible');
             padding: 0 32px;
             text-indent: 1cm
         }
+
         .collection a {
             text-transform: capitalize !important;
         }
+
         .classcatalogos a {
             color: rgba(0, 0, 0, 0.87);
             font-family: Tahoma;
@@ -474,6 +476,7 @@ var elems = document.querySelectorAll('.collapsible');
             padding: 0 32px;
             text-indent: 1cm
         }
+
         .collapsible-body1 {
             display: none;
             border-bottom: 1px solid #ddd;
@@ -482,6 +485,7 @@ var elems = document.querySelectorAll('.collapsible');
             padding: 2rem;
             background-color: #eceff1 !important;
         }
+
         .collapsible-body2 {
             display: none;
             border-bottom: 1px solid #ddd;
@@ -568,13 +572,21 @@ var elems = document.querySelectorAll('.collapsible');
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)*@
     @*<script>
-        $(document).ready(function (e) {
-            $(".mantomayor").each(function (index) {
-                $("#mantomayor").append('<li>' + $(this).html()+'</li>');
-                $(this).remove();
+            $(document).ready(function (e) {
+                $(".mantomayor").each(function (index) {
+                    $("#mantomayor").append('<li>' + $(this).html()+'</li>');
+                    $(this).remove();
+                });
             });
-        });
-    </script>*@
-    
+        </script>*@
+
+    <script>
+        function clickAndDisable(link) {
+            // disable subsequent clicks
+            link.onclick = function (event) {
+                event.preventDefault();
+            }
+        }
+    </script>
 </body>
 </html>
