@@ -128,7 +128,7 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            @if (Model.D.DOCUMENTOF[0].FACTURA != "0")
+                                            @if (Model.D.DOCUMENTOF[0].FACTURA.Trim() != "0")
                                             {
                                                 <th id="thead_fact">No. Factura Fiscal</th> @*B20180801 MGC Textos*@
                                             }
@@ -136,16 +136,16 @@
                                             {
                                                 <th id="thead_fecha">Fecha Factura</th> @*B20180801 MGC Textos*@
                                             }
-                                            @if (Model.D.DOCUMENTOF[0].PROVEEDOR != "0         ")
+                                            @if (Model.D.DOCUMENTOF[0].PROVEEDOR.Trim() != "0")
                                             {
                                                 <th id="thead_prov">Proveedor</th> @*B20180801 MGC Textos*@
                                                 <th id="thead_provdesc">Proveedor Desc</th> @*B20180801 MGC Textos*@
                                             }
-                                            @if (Model.D.DOCUMENTOF[0].CONTROL != "0")
+                                            @if (Model.D.DOCUMENTOF[0].CONTROL.Trim() != "0")
                                             {
                                                 <th id="thead_control">Control</th> @*B20180801 MGC Textos*@
                                             }
-                                            @if (Model.D.DOCUMENTOF[0].AUTORIZACION != "0")
+                                            @if (Model.D.DOCUMENTOF[0].AUTORIZACION.Trim() != "0")
                                             {
                                                 <th id="thead_aut">Autorización</th> @*B20180801 MGC Textos*@
                                             }
@@ -153,11 +153,11 @@
                                             {
                                                 <th id="thead_ven">Vencimiento</th> @*B20180801 MGC Textos*@
                                             }
-                                            @if (Model.D.DOCUMENTOF[0].FACTURAK != "0")
+                                            @if (Model.D.DOCUMENTOF[0].FACTURAK.Trim() != "0")
                                             {
                                                 <th id="thead_factk">Factura k</th> @*B20180801 MGC Textos*@
                                             }
-                                            @if (Model.D.DOCUMENTOF[0].EJERCICIOK != "0")
+                                            @if (Model.D.DOCUMENTOF[0].EJERCICIOK.Trim() != "0")
                                             {
                                                 <th id="thead_ejercicio">Año</th> @*B20180801 MGC Textos*@
                                             }
@@ -194,7 +194,7 @@
                                         foreach (var item in Model.D.DOCUMENTOF)
                                         {
                                             <tr>
-                                                @if (item.FACTURA != "0")
+                                                @if (item.FACTURA.Trim() != "0")
                                                 {
                                                     <td>@item.FACTURA</td>
                                                 }
@@ -217,11 +217,11 @@
                                                     <td></td>
                                                     }
                                                 }
-                                                @if (item.CONTROL != "0")
+                                                @if (item.CONTROL.Trim() != "0")
                                                 {
                                                     <td>@item.CONTROL</td>
                                                 }
-                                                @if (item.AUTORIZACION != "0")
+                                                @if (item.AUTORIZACION.Trim() != "0")
                                                 {
                                                     <td>@item.AUTORIZACION</td>
                                                 }
@@ -231,11 +231,11 @@
                                                     venc = venc.Substring(0, 10);
                                                     <td>@venc</td>
                                                 }
-                                                @if (item.FACTURAK != "0")
+                                                @if (item.FACTURAK.Trim() != "0")
                                                 {
                                                     <td>@item.FACTURAK</td>
                                                 }
-                                                @if (item.EJERCICIOK != "0")
+                                                @if (item.EJERCICIOK.Trim() != "0")
                                                 {
                                                     <td>@item.EJERCICIOK</td>
                                                 }

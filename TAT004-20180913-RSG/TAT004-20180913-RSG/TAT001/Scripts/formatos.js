@@ -140,7 +140,7 @@ function toShowG(string) {//LGPP 21.08.2018----------------
             var _xv = xx.replace('.', '');
             xx = _xv.replace(',', '.');
             var _xpf = parseFloat(xx.replace(',', '.')).toFixed(2);
-            xpf = _xpf.replace('.', ',');
+            _xpf = _xpf.replace('.', ',');
             string = ("$" + _xpf.toString().replace(/\B(?=(?=\d*\,)(\d{3})+(?!\d))/g, "."));
         }
     }

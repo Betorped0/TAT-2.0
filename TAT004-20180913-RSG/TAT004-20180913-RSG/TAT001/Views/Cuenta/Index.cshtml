@@ -81,6 +81,17 @@
         <tbody>
             @foreach (var item in Model)
             {
+                TAT001.Entities.TAT001Entities db = new TAT001.Entities.TAT001Entities();
+                string abono = "";
+                if (item.CUENTAGL==null)
+                {
+                    abono = "red";
+                }
+                string cargo = "";
+                if (item.CUENTAGL1 == null)
+                {
+                    cargo = "red";
+                }
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.SOCIEDAD_ID)
@@ -94,10 +105,10 @@
                     <td>
                         @item.EJERCICIO.ToString()
                     </td>
-                    <td>
+                    <td class="@abono">
                         @item.ABONO.ToString()
                     </td>
-                    <td>
+                    <td class="@cargo">
                         @item.CARGO.ToString()
                     </td>
                     <td>

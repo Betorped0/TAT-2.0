@@ -31,7 +31,7 @@
                         <div class="form-group input-field col s6">
                             @Html.LabelFor(model => model.TIPO_CAMBIO, "Tipo de cambio", htmlAttributes: new { @class = "control-label active", @id = "lbl_tipocambio" })@*B20180801 MGC Textos*@
                             <div class="col-md-10">
-                                @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada, @Value = ViewBag.tcambio, @onload = "this.value = toShow(this.value);" } })
+                                @Html.EditorFor(model => model.TIPO_CAMBIO, new { htmlAttributes = new { @id = "tipo_cambio", @class = "form-control " + @ViewBag.relacionada, @Value = ViewBag.tcambio } })
                             </div>
                         </div>
                         <div class=" input-field col s6">

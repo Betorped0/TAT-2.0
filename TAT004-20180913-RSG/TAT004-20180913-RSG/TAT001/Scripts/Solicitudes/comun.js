@@ -883,7 +883,7 @@ $(document).ready(function () {
     //    _Tc = _xtc;
     //    $("#tipo_cambio").val("$" + _Tc);
     //}
-    $("#tipo_cambio").val(toShow(_Tc));
+    $("#tipo_cambio").val(toShow5(_Tc));
     //LEJ 09.07.18---------------------------------------------Termina
 
     $('#tipo_cambio').focusout(function (e) {
