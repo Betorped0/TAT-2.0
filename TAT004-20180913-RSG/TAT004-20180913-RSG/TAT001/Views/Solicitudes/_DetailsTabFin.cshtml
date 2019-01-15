@@ -559,6 +559,7 @@
                                 </div>
                             </div>
                             <script>
+                                var clearingV = "";
                                     selConcepto(document.getElementById("txt_concepto").value);
 
                                     function selConcepto(value) {
@@ -612,7 +613,9 @@
                                     var sub = tot * por / 100;
                                     foot = foot + sub;
 
-                                    $("#tab_conc tbody").append("<tr><td>" + pp[i].label + "</td><td>" + toShowPorc(por / 100) + "</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
+                                        $("#tab_conc tbody").append("<tr><td>" + pp[i].label + "</td><td>" + toShowPorc(por / 100) + "</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
+                                        $("#txt_clearing").text(toShow(sub));
+                                        clearingV = (toShow(sub));
                                 }
 
                                 $("#tab_conc tfoot").append("<tr><td></td><td></td><td></td><th>" + toShow(foot) + "</th><tr>");

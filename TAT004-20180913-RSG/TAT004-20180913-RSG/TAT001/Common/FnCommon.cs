@@ -37,7 +37,7 @@ namespace TAT001.Common
             controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id_textos) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
 
         }
-        public static void ObtenerConfPage(TAT001Entities db, int pagina_id, string user_id, ControllerBase controller,int? pagina_id_textos=null)
+        public static void ObtenerConfPage(TAT001Entities db, int pagina_id, string user_id, ControllerBase controller, int? pagina_id_textos = null)
         {
             var user = ObtenerUsuario(db, user_id);
             controller.ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
@@ -53,10 +53,10 @@ namespace TAT001.Common
             controller.ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina_id) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID) && a.ACTIVO == true).ToList();
             controller.ViewBag.spras_id = user.SPRAS_ID;
         }
-       
-        
-       
-       
+
+
+
+
         public static int ObtenerPeriodoCalendario445(TAT001Entities db, string sociedad_id, string tsol_id, string usuario_id = null)
         {
             //tipo
@@ -74,7 +74,7 @@ namespace TAT001.Common
             x.EJERCICIO == ejercicio &&
             (fechaActual >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) &&
              fechaActual <= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
-            if (calendarioAc!=null)
+            if (calendarioAc != null)
             {
                 return calendarioAc.PERIODO;
             }
@@ -93,14 +93,14 @@ namespace TAT001.Common
                     return calendarioEx.PERIODO;
                 }
             }
-             
-                calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
-                x.ACTIVO &&
-                x.SOCIEDAD_ID == sociedad_id &&
-                x.TSOL_ID == tsol_id &&
-                x.EJERCICIO == ejercicio &&
-                (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) &&
-                fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
+
+            calendarioAc = db.CALENDARIO_AC.FirstOrDefault(x =>
+            x.ACTIVO &&
+            x.SOCIEDAD_ID == sociedad_id &&
+            x.TSOL_ID == tsol_id &&
+            x.EJERCICIO == ejercicio &&
+            (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) &&
+            fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
             if (calendarioAc != null)
             {
                 return calendarioAc.PERIODO;
@@ -108,12 +108,12 @@ namespace TAT001.Common
 
             return 0;
         }
-        public static bool  ValidarPeriodoEnCalendario445(TAT001Entities db,string sociedad_id, string tsol_id,int periodo_id,string tipo, string usuario_id=null)
+        public static bool ValidarPeriodoEnCalendario445(TAT001Entities db, string sociedad_id, string tsol_id, int periodo_id, string tipo, string usuario_id = null)
         {
             //tipo
             //PRE = PreCierre
             //CI =  Cierre
-            bool esPeriodoAbierto=false;
+            bool esPeriodoAbierto = false;
             DateTime fechaActual = DateTime.Now;
             short ejercicio = short.Parse(fechaActual.Year.ToString());
 
@@ -122,12 +122,12 @@ namespace TAT001.Common
                 case "PRE":
                     esPeriodoAbierto = db.CALENDARIO_AC.Any(x =>
                     x.ACTIVO &&
-                    x.SOCIEDAD_ID == sociedad_id && 
-                    x.TSOL_ID == tsol_id && 
+                    x.SOCIEDAD_ID == sociedad_id &&
+                    x.TSOL_ID == tsol_id &&
                     x.PERIODO == periodo_id &&
-                    x.EJERCICIO==ejercicio &&
-                    (fechaActual>= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) && 
-                     fechaActual<= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
+                    x.EJERCICIO == ejercicio &&
+                    (fechaActual >= DbFunctions.CreateDateTime(x.PRE_FROMF.Year, x.PRE_FROMF.Month, x.PRE_FROMF.Day, x.PRE_FROMH.Hours, x.PRE_FROMH.Minutes, x.PRE_FROMH.Seconds) &&
+                     fechaActual <= DbFunctions.CreateDateTime(x.PRE_TOF.Year, x.PRE_TOF.Month, x.PRE_TOF.Day, x.PRE_TOH.Hours, x.PRE_TOH.Minutes, x.PRE_TOH.Seconds)));
                     if (!esPeriodoAbierto && usuario_id != null)
                     {
                         esPeriodoAbierto = db.CALENDARIO_EX.Any(x =>
@@ -135,22 +135,22 @@ namespace TAT001.Common
                           x.SOCIEDAD_ID == sociedad_id &&
                           x.TSOL_ID == tsol_id &&
                           x.PERIODO == periodo_id &&
-                          x.USUARIO_ID==usuario_id &&
+                          x.USUARIO_ID == usuario_id &&
                           x.EJERCICIO == ejercicio &&
-                          (fechaActual >= DbFunctions.CreateDateTime(x.EX_FROMF.Year, x.EX_FROMF.Month, x.EX_FROMF.Day, x.EX_FROMH.Hours, x.EX_FROMH.Minutes,x.EX_FROMH.Seconds) &&
+                          (fechaActual >= DbFunctions.CreateDateTime(x.EX_FROMF.Year, x.EX_FROMF.Month, x.EX_FROMF.Day, x.EX_FROMH.Hours, x.EX_FROMH.Minutes, x.EX_FROMH.Seconds) &&
                           fechaActual <= DbFunctions.CreateDateTime(x.EX_TOF.Year, x.EX_TOF.Month, x.EX_TOF.Day, x.EX_TOH.Hours, x.EX_TOH.Minutes, x.EX_TOH.Seconds)));
                     }
                     break;
                 case "CI":
-                    esPeriodoAbierto = db.CALENDARIO_AC.Any(x=>
+                    esPeriodoAbierto = db.CALENDARIO_AC.Any(x =>
                         x.ACTIVO &&
                         x.SOCIEDAD_ID == sociedad_id &&
                         x.TSOL_ID == tsol_id &&
-                        x.PERIODO == periodo_id  &&
+                        x.PERIODO == periodo_id &&
                         x.EJERCICIO == ejercicio &&
-                        (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) && 
+                        (fechaActual >= DbFunctions.CreateDateTime(x.CIE_FROMF.Year, x.CIE_FROMF.Month, x.CIE_FROMF.Day, x.CIE_FROMH.Hours, x.CIE_FROMH.Minutes, x.CIE_FROMH.Seconds) &&
                         fechaActual <= DbFunctions.CreateDateTime(x.CIE_TOF.Year, x.CIE_TOF.Month, x.CIE_TOF.Day, x.CIE_TOH.Hours, x.CIE_TOH.Minutes, x.CIE_TOH.Seconds)));
-                 
+
                     break;
                 default:
                     break;
@@ -176,11 +176,11 @@ namespace TAT001.Common
             };
         }
 
-       
+
         public static MATERIAL ObtenerMaterial(TAT001Entities db, string user_id, string material_id)
         {
             string spras_id = ObtenerSprasId(db, user_id);
-            MATERIAL material= db.MATERIALs.Where(x => x.ID == material_id).FirstOrDefault();
+            MATERIAL material = db.MATERIALs.Where(x => x.ID == material_id).FirstOrDefault();
 
             if (material.MATERIALTs.Any(x => x.SPRAS == spras_id))
             {
@@ -195,8 +195,8 @@ namespace TAT001.Common
         public static List<MATERIALGP> ObtenerMaterialGroups(TAT001Entities db)
         {
             return db.MATERIALGPs.Where(a => a.ACTIVO).ToList();
-        }  
-        public static MATERIALGP ObtenerMaterialGroup(TAT001Entities db,string materialgp_id)
+        }
+        public static MATERIALGP ObtenerMaterialGroup(TAT001Entities db, string materialgp_id)
         {
             return db.MATERIALGPs.Where(x => x.ID == materialgp_id).FirstOrDefault();
         }
@@ -205,10 +205,10 @@ namespace TAT001.Common
             return db.MATERIALGPTs.Where(x => x.MATERIALGP_ID == "000" && x.SPRAS_ID == "EN").FirstOrDefault();
         }
 
-       
-       
 
-        public static List<CSP_PRESU_CLIENT_Result> ObtenerPresupuestoCliente(TAT001Entities db, string kunnr,  string periodo)
+
+
+        public static List<CSP_PRESU_CLIENT_Result> ObtenerPresupuestoCliente(TAT001Entities db, string kunnr, string periodo)
         {
             List<CSP_PRESU_CLIENT_Result> presupuesto = db.Database.SqlQuery<CSP_PRESU_CLIENT_Result>("CSP_PRESU_CLIENT @CLIENTE, @PERIODO",
             new SqlParameter("@CLIENTE", kunnr),
@@ -216,8 +216,8 @@ namespace TAT001.Common
             return presupuesto;
         }
 
-       
-     
+
+
 
         public static List<DOCUMENTOP_SP> ObtenerDocumentoP(TAT001Entities db, string spras_id, decimal num_doc, DateTime vigencia_de, DateTime vigencia_al)
         {
@@ -253,8 +253,8 @@ namespace TAT001.Common
         }
         public static List<SelectListItem> ObtenerCmbFrecuencia(string SPRAS_ID)
         {
-            if(SPRAS_ID=="ES")
-            return new List<SelectListItem> {
+            if (SPRAS_ID == "ES")
+                return new List<SelectListItem> {
                     new SelectListItem{Text="Semana(s)",Value="S"},
                     new SelectListItem{Text="Mes(es)",Value="M"}
             };
@@ -331,18 +331,18 @@ namespace TAT001.Common
         }
         public static DateTime obtenerProximaFecha(NEGOCIACION2 modelo, string tipomes)
         {
-            DateTime proximafecha=modelo.FINICIO;
+            DateTime proximafecha = modelo.FINICIO;
             if (modelo.FRECUENCIA == "S")
             {
-                    var diasemana = getDiaNombre(modelo.DIA_SEMANA);
-                    if (modelo.FINICIO.DayOfWeek.ToString() == diasemana)
-                    {
-                        return modelo.FINICIO;
-                    }
-                    else
-                    {
-                        var dia_semana = getDiaNum(getDiaNombre(modelo.DIA_SEMANA));
-                        var dia_inicio = getDiaNum(modelo.FINICIO.DayOfWeek.ToString());
+                var diasemana = getDiaNombre(modelo.DIA_SEMANA);
+                if (modelo.FINICIO.DayOfWeek.ToString() == diasemana)
+                {
+                    return modelo.FINICIO;
+                }
+                else
+                {
+                    var dia_semana = getDiaNum(getDiaNombre(modelo.DIA_SEMANA));
+                    var dia_inicio = getDiaNum(modelo.FINICIO.DayOfWeek.ToString());
                     if (dia_inicio == 7)
                     {
                         if (dia_semana == 6)
@@ -373,9 +373,9 @@ namespace TAT001.Common
                         else if (dia_semana == 1)
                             proximafecha = proximafecha.AddDays(2);
                     }
-                    if (dia_inicio==5)
+                    if (dia_inicio == 5)
                     {
-                        if (dia_semana>dia_inicio)
+                        if (dia_semana > dia_inicio)
                             proximafecha = proximafecha.AddDays((dia_semana - dia_inicio));
                         else if (dia_semana == 4)
                             proximafecha = proximafecha.AddDays(6);
@@ -388,8 +388,8 @@ namespace TAT001.Common
                     }
                     if (dia_inicio == 4)
                     {
-                        if (dia_semana>dia_inicio)
-                            proximafecha = proximafecha.AddDays((dia_semana-dia_inicio));                       
+                        if (dia_semana > dia_inicio)
+                            proximafecha = proximafecha.AddDays((dia_semana - dia_inicio));
                         else if (dia_semana == 3)
                             proximafecha = proximafecha.AddDays(6);
                         else if (dia_semana == 2)
@@ -415,7 +415,7 @@ namespace TAT001.Common
                     }
                     if (dia_inicio == 1)
                     {
-                            proximafecha = proximafecha.AddDays((dia_semana - dia_inicio));
+                        proximafecha = proximafecha.AddDays((dia_semana - dia_inicio));
                     }
                 }
             }
@@ -434,32 +434,32 @@ namespace TAT001.Common
                 }
                 else
                 {
-                    var dia =getDiaNombre(modelo.ORDINAL_DSEMANA);
+                    var dia = getDiaNombre(modelo.ORDINAL_DSEMANA);
                     var ordinal = modelo.ORDINAL_MES;
-                    var diasmes =DateTime.DaysInMonth(modelo.FINICIO.Year, modelo.FINICIO.Month);
-                    for(int i=1;i<=diasmes;i++)
+                    var diasmes = DateTime.DaysInMonth(modelo.FINICIO.Year, modelo.FINICIO.Month);
+                    for (int i = 1; i <= diasmes; i++)
                     {
                         var fecha = new DateTime(modelo.FINICIO.Year, modelo.FINICIO.Month, i);
                         if (fecha.DayOfWeek.ToString() == dia)
                         {
-                                var mes = fecha.Month;
-                                fecha = fecha.AddDays((7 * (int)(modelo.ORDINAL_MES-1)));
-                                var mes2 = fecha.Month;
-                                if(mes!=mes2)
-                                    fecha = fecha.AddDays(-7);
-                                if (modelo.FINICIO < fecha)
-                                    return fecha;
-                                var fecha2 = new DateTime(modelo.FINICIO.Year, modelo.FINICIO.Month, 1).AddMonths(1);
-                                    var diasmes2 = DateTime.DaysInMonth(fecha2.Year, fecha2.Month);
-                                    for (int j = 1; j <= diasmes2; j++)
-                                    {
-                                        var fechatemp = new DateTime(fecha2.Year, fecha2.Month, j);
-                                        if (fechatemp.DayOfWeek.ToString() == dia)
-                                        {
-                                            fechatemp = fechatemp.AddDays((7 * (int)(modelo.ORDINAL_MES - 1)));
-                                            return fechatemp;
-                                        }
-                                    }                           
+                            var mes = fecha.Month;
+                            fecha = fecha.AddDays((7 * (int)(modelo.ORDINAL_MES - 1)));
+                            var mes2 = fecha.Month;
+                            if (mes != mes2)
+                                fecha = fecha.AddDays(-7);
+                            if (modelo.FINICIO < fecha)
+                                return fecha;
+                            var fecha2 = new DateTime(modelo.FINICIO.Year, modelo.FINICIO.Month, 1).AddMonths(1);
+                            var diasmes2 = DateTime.DaysInMonth(fecha2.Year, fecha2.Month);
+                            for (int j = 1; j <= diasmes2; j++)
+                            {
+                                var fechatemp = new DateTime(fecha2.Year, fecha2.Month, j);
+                                if (fechatemp.DayOfWeek.ToString() == dia)
+                                {
+                                    fechatemp = fechatemp.AddDays((7 * (int)(modelo.ORDINAL_MES - 1)));
+                                    return fechatemp;
+                                }
+                            }
                         }
                     }
 
@@ -467,7 +467,7 @@ namespace TAT001.Common
             }
             return proximafecha;
         }
-        public static decimal ObtenerImpuesto(TAT001Entities db, DOCUMENTO D, ref bool esNC, string[] categorias=null)
+        public static decimal ObtenerImpuesto(TAT001Entities db, DOCUMENTO D, ref bool esNC, string[] categorias = null)
         {
             decimal impuesto = 0.0M;
             string[] tsolImp = new string[] { "NC", "NCA", "NCAS", "NCAM", "NCASM", "NCS", "NCI", "NCIA", "NCIAS", "NCIS" };
@@ -495,20 +495,24 @@ namespace TAT001.Common
                         {
                             categorias[i] = db.MATERIALs.First(x => x.ID == catAux).MATERIALGP_ID;
                         }
-                        
+
                         i++;
                     }
 
                 }
-                if ((categorias!=null && categorias.Any() && (categorias.Contains("605") || categorias.Contains("207"))) || db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
+                if ((categorias != null && categorias.Any() && (categorias.Contains("605") || categorias.Contains("207"))) || db.DOCUMENTOPs.Any(x => (x.MATKL == "605" || x.MATKL == "207") && x.NUM_DOC == D.NUM_DOC))
                 {
                     KBETR = db.IIMPUESTOes.First(x => x.MWSKZ == "A0").KBETR.Value;
                 }
                 else
                 {
-                    decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
-                    string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
-                    KBETR = db.IIMPUESTOes.Any(x => x.MWSKZ == tax_code && x.LAND==pais_id) ? db.IIMPUESTOes.First(x => x.MWSKZ == tax_code && x.LAND == pais_id).KBETR.Value : 0.0M;
+                    try
+                    {
+                        decimal concecutivo = db.CONPOSAPHs.First(x => x.TIPO_SOL == "NC" && x.SOCIEDAD == D.SOCIEDAD_ID && (x.TIPO_DOC == "YG" || x.TIPO_DOC == "DG")).CONSECUTIVO;
+                        string tax_code = db.CONPOSAPPs.First(x => x.CONSECUTIVO == concecutivo).TAX_CODE;
+                        KBETR = db.IIMPUESTOes.Any(x => x.MWSKZ == tax_code && x.LAND == pais_id) ? db.IIMPUESTOes.First(x => x.MWSKZ == tax_code && x.LAND == pais_id).KBETR.Value : 0.0M;
+                    }
+                    catch { KBETR = 0; }
                 }
                 impuesto = (D.MONTO_DOC_MD.Value * KBETR);
             }
