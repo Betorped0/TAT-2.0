@@ -12,13 +12,10 @@ namespace TAT001.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class TSOL_GROUP
+    public partial class TSOL_XG
     {
-        public string ID { get; set; }
-        public string TIPO { get; set; }
-        public string DESCRIPCION { get; set; }
-        public string ID_PADRE { get; set; }
-        public string TIPO_PADRE { get; set; }
-        public string TIPOSOC { get; set; }
+        public string SOCIEDAD_ID { get; set; }
+        public string TSOL_TIPO { get; set; }
+        public bool ACTIVO { get; set; }
     }
 }

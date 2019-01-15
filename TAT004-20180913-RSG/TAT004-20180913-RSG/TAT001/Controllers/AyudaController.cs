@@ -256,7 +256,6 @@ namespace TAT001.Controllers
                 return inicial+1;
             }
         }
-        public List<string> ExtensionesNS = new List<string> { "application/bat",
-"application/x-bat","application/x-msdos-program","application/x-msdownload" };
+        public List<string> ExtensionesNS = new List<string> { "application/bat", "application/x-bat","application/x-msdos-program","application/x-msdownload" };
     }
 }

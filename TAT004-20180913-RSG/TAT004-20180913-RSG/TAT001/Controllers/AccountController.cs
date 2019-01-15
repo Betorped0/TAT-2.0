@@ -23,7 +23,7 @@ namespace TAT001.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        TAT001Entities db = new TAT001Entities();
+        readonly TAT001Entities db = new TAT001Entities();
 
         public AccountController()
         {
@@ -39,7 +39,7 @@ namespace TAT001.Controllers
         {
             get
             {
-                ApplicationSignInManager A = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                ////ApplicationSignInManager A = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
             private set
@@ -77,11 +77,10 @@ namespace TAT001.Controllers
             }
             catch
             {
-
+                //Si no hay país que borrar
             }
+
             LoginViewModel m = new LoginViewModel();
-            //m.ID = "admin";
-            //m.Password = "admin";
             ViewBag.ReturnUrl = returnUrl;
             return View(m);
         }
@@ -93,28 +92,6 @@ namespace TAT001.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(model);
-            //}
-
-            //// No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
-            //// Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
-            //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            ////CookieAuthenticationProvider
-            //switch (result)
-            //{
-            //    case SignInStatus.Success:
-            //        return RedirectToLocal(returnUrl);
-            //    case SignInStatus.LockedOut:
-            //        return View("Lockout");
-            //    case SignInStatus.RequiresVerification:
-            //        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-            //    case SignInStatus.Failure:
-            //    default:
-            //        ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
-            //        return View(model);
-            //}
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -127,22 +104,22 @@ namespace TAT001.Controllers
             Cryptography c = new Cryptography();
             string pass = c.Encrypt(user.PASS);
 
-            using (TAT001Entities db = new TAT001Entities())
-            {
-                user = db.USUARIOs.Where(a => a.ID.Equals(user.ID) && a.PASS.Equals(pass) & a.ACTIVO == true).FirstOrDefault();
-            }
-            //user =  Repository.GetUserDetails(user);
+            ////using (TAT001Entities db = new TAT001Entities())
+            ////{
+                user = db.USUARIOs.Where(a => a.ID.Equals(user.ID) && a.PASS.Equals(pass) && a.ACTIVO == true).FirstOrDefault();
+            ////}
+
 
             if (user != null)
             {
                 FormsAuthentication.SetAuthCookie(model.ID, false);
 
-                //var authTicket = new FormsAuthenticationTicket(1, user.ID, DateTime.Now, DateTime.Now.AddMinutes(20), false, user.MIEMBROS.FirstOrDefault().ROL.NOMBRE);
+                ////var authTicket = new FormsAuthenticationTicket(1, user.ID, DateTime.Now, DateTime.Now.AddMinutes(20), false, user.MIEMBROS.FirstOrDefault().ROL.NOMBRE);
                 var authTicket = new FormsAuthenticationTicket(1, user.ID.ToUpper(), DateTime.Now, DateTime.Now.AddDays(1), false, "Administrador");
                 string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                 var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
                 HttpContext.Response.Cookies.Add(authCookie);
-                //return RedirectToAction("Index", "Home");
+                ////return RedirectToAction("Index", "Home");
                 if (returnUrl != null)
                 {
                     bool us = false;
@@ -176,22 +153,22 @@ namespace TAT001.Controllers
                             else
                             {
                                 return RedirectToAction("validateLoginView", new { USUARIO_ID = user.ID.ToUpper(), returnUrl = returnUrl });
-                                //checkUser.USUARIO_ID = user.ID;
-                                //checkUser.POS = 1;
-                                //checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;
-                                //checkUser.NAVEGADOR = Request.Browser.Type;
-                                //checkUser.UBICACION = RegionInfo.CurrentRegion.DisplayName;
-                                //checkUser.FECHA = DateTime.Now;
-                                //checkUser.LOGIN = true;
-                                //db.SaveChanges();
-                                //Session["userlog"] = checkUser;
-                                //return Redirect(returnUrl);
+                                ////checkUser.USUARIO_ID = user.ID;
+                                ////checkUser.POS = 1;
+                                ////checkUser.SESION = System.Web.HttpContext.Current.Session.SessionID;
+                                ////checkUser.NAVEGADOR = Request.Browser.Type;
+                                ////checkUser.UBICACION = RegionInfo.CurrentRegion.DisplayName;
+                                ////checkUser.FECHA = DateTime.Now;
+                                ////checkUser.LOGIN = true;
+                                ////db.SaveChanges();
+                                ////Session["userlog"] = checkUser;
+                                ////return Redirect(returnUrl);
                             }
 
                         }
                         catch
                         {
-
+                            //Hay que revisar las posibilidades de error
                         }
                     }
                     USUARIOLOG usuLog2 = new USUARIOLOG();
@@ -214,7 +191,7 @@ namespace TAT001.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            ////AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             try
             {
                 Session["pais"] = null;
@@ -252,16 +229,10 @@ namespace TAT001.Controllers
 
         public ActionResult validateLoginView(string USUARIO_ID, string returnUrl)
         {
-            int pagina = 221; //ID EN BASE DE DATOS
+            ////int pagina = 221; //ID EN BASE DE DATOS
             string u = User.Identity.Name;
             var user = db.USUARIOs.Where(a => a.ID.Equals(u)).FirstOrDefault();
-            //ViewBag.permisos = db.PAGINAVs.Where(a => a.ID.Equals(user.ID)).ToList();
-            //ViewBag.carpetas = db.CARPETAVs.Where(a => a.USUARIO_ID.Equals(user.ID)).ToList();
             ViewBag.usuario = user;
-            //ViewBag.rol = user.PUESTO.PUESTOTs.Where(a => a.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            ////ViewBag.Title = db.PAGINAs.Where(a => a.ID.Equals(pagina)).FirstOrDefault().PAGINATs.Where(b => b.SPRAS_ID.Equals(user.SPRAS_ID)).FirstOrDefault().TXT50;
-            //ViewBag.warnings = db.WARNINGVs.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
-            //ViewBag.textos = db.TEXTOes.Where(a => (a.PAGINA_ID.Equals(pagina) || a.PAGINA_ID.Equals(0)) && a.SPRAS_ID.Equals(user.SPRAS_ID)).ToList();
             var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == USUARIO_ID);
             if (returnUrl == "/Account/validateLoginView")
                 returnUrl = "/";
@@ -279,7 +250,7 @@ namespace TAT001.Controllers
                 uSUARIOLOG.POS = 1;
                 uSUARIOLOG.SESION = System.Web.HttpContext.Current.Session.SessionID;
                 uSUARIOLOG.NAVEGADOR = Request.Browser.Type;
-                //uSUARIOLOG.UBICACION = System.Environment.MachineName + "/" + System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
+                ////uSUARIOLOG.UBICACION = System.Environment.MachineName + "/" + System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
                 uSUARIOLOG.UBICACION = System.Environment.UserName + " - " + RegionInfo.CurrentRegion.DisplayName;
                 uSUARIOLOG.FECHA = DateTime.Now;
                 uSUARIOLOG.LOGIN = true;
@@ -289,7 +260,9 @@ namespace TAT001.Controllers
                     db.SaveChanges();
                     Session["userlog"] = uSUARIOLOG;
                 }
-                catch { }
+                catch {
+                    //Tal vez hay error en la conexión
+                }
                 return Redirect(returnUrl);
             }
 
@@ -311,33 +284,33 @@ namespace TAT001.Controllers
 
         //
         // POST: /Account/VerifyCode
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        ////[HttpPost]
+        ////[AllowAnonymous]
+        ////[ValidateAntiForgeryToken]
+        ////public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
+        ////{
+        ////    if (!ModelState.IsValid)
+        ////    {
+        ////        return View(model);
+        ////    }
 
-            // El código siguiente protege de los ataques por fuerza bruta a los códigos de dos factores. 
-            // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario 
-            // se bloqueará durante un período de tiempo especificado. 
-            // Puede configurar el bloqueo de la cuenta en IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Código no válido.");
-                    return View(model);
-            }
-        }
+        ////    // El código siguiente protege de los ataques por fuerza bruta a los códigos de dos factores. 
+        ////    // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario 
+        ////    // se bloqueará durante un período de tiempo especificado. 
+        ////    // Puede configurar el bloqueo de la cuenta en IdentityConfig
+        ////    var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
+        ////    switch (result)
+        ////    {
+        ////        case SignInStatus.Success:
+        ////            return RedirectToLocal(model.ReturnUrl);
+        ////        case SignInStatus.LockedOut:
+        ////            return View("Lockout");
+        ////        case SignInStatus.Failure:
+        ////        default:
+        ////            ModelState.AddModelError("", "Código no válido.");
+        ////            return View(model);
+        ////    }
+        ////}
 
         //
         // GET: /Account/Register
@@ -364,9 +337,9 @@ namespace TAT001.Controllers
 
                     // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
                     // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                    //// string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    //// var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //// await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -416,10 +389,10 @@ namespace TAT001.Controllers
 
                 // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
                 // Enviar correo electrónico con este vínculo
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                //// string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                //// var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                //// await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                //// return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
@@ -524,33 +497,33 @@ namespace TAT001.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
-        [AllowAnonymous]
-        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
-        {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-            if (loginInfo == null)
-            {
-                return RedirectToAction("Login");
-            }
+        ////[AllowAnonymous]
+        ////public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        ////{
+        ////    var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+        ////    if (loginInfo == null)
+        ////    {
+        ////        return RedirectToAction("Login");
+        ////    }
 
-            // Si el usuario ya tiene un inicio de sesión, iniciar sesión del usuario con este proveedor de inicio de sesión externo
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
-                case SignInStatus.Failure:
-                default:
-                    // Si el usuario no tiene ninguna cuenta, solicitar que cree una
-                    ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
-            }
-        }
+        ////    // Si el usuario ya tiene un inicio de sesión, iniciar sesión del usuario con este proveedor de inicio de sesión externo
+        ////    var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+        ////    switch (result)
+        ////    {
+        ////        case SignInStatus.Success:
+        ////            return RedirectToLocal(returnUrl);
+        ////        case SignInStatus.LockedOut:
+        ////            return View("Lockout");
+        ////        case SignInStatus.RequiresVerification:
+        ////            return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+        ////        case SignInStatus.Failure:
+        ////        default:
+        ////            // Si el usuario no tiene ninguna cuenta, solicitar que cree una
+        ////            ViewBag.ReturnUrl = returnUrl;
+        ////            ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+        ////            return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+        ////    }
+        ////}
 
         //
         // POST: /Account/ExternalLoginConfirmation

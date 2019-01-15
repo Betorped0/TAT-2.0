@@ -373,6 +373,8 @@
         <AssociationConnector Association="TAT001Model.USUARIOGA" ManuallyRouted="false" />
         <AssociationConnector Association="TAT001Model.USUARIOSOC" ManuallyRouted="false" />
         <EntityTypeShape EntityType="TAT001Model.NEGOCIACION2" Width="1.5" PointX="0.75" PointY="19.75" />
+        <EntityTypeShape EntityType="TAT001Model.CUENTAA" Width="1.5" PointX="3.375" PointY="19.75" />
+        <EntityTypeShape EntityType="TAT001Model.TSOL_XG" Width="1.5" PointX="19.375" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

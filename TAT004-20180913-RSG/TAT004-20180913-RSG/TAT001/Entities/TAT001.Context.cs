@@ -193,6 +193,8 @@ namespace TAT001.Entities
         public virtual DbSet<PAGINAV> PAGINAVs { get; set; }
         public virtual DbSet<WARNINGV> WARNINGVs { get; set; }
         public virtual DbSet<NEGOCIACION2> NEGOCIACION2 { get; set; }
+        public virtual DbSet<CUENTAA> CUENTAAs { get; set; }
+        public virtual DbSet<TSOL_XG> TSOL_XG { get; set; }
     
         [DbFunction("TAT001Entities", "split")]
         public virtual IQueryable<split_Result> split(string delimited, string delimiter)

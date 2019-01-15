@@ -490,6 +490,19 @@
           <Property Name="LIMITE" Type="decimal" Precision="13" Scale="5" />
           <Property Name="IMPUESTO" Type="nchar" MaxLength="2" />
         </EntityType>
+        <EntityType Name="CUENTAA">
+          <Key>
+            <PropertyRef Name="SOCIEDAD_ID" />
+            <PropertyRef Name="CLAVE" />
+            <PropertyRef Name="CUENTA_ID" />
+          </Key>
+          <Property Name="SOCIEDAD_ID" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="CLAVE" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="CUENTA_ID" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="NOMBRE1" Type="nvarchar" MaxLength="20" />
+          <Property Name="NOMBRE2" Type="nvarchar" MaxLength="50" />
+          <Property Name="ACTIVO" Type="bit" />
+        </EntityType>
         <EntityType Name="CUENTAGL">
           <Key>
             <PropertyRef Name="ID" />
@@ -1979,6 +1992,7 @@ warning 6002: The table/view 'TAT004.dbo.TAB_CAMPO' does not have a primary key 
           <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="60" Nullable="false" />
           <Property Name="ID_PADRE" Type="nvarchar" MaxLength="10" />
           <Property Name="TIPO_PADRE" Type="nvarchar" MaxLength="5" />
+          <Property Name="TIPOSOC" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="TSOL_GROUPT">
           <Key>
@@ -2000,6 +2014,16 @@ warning 6002: The table/view 'TAT004.dbo.TAB_CAMPO' does not have a primary key 
           <Property Name="TSOL_GROUP_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="TSOL_GROUP_TIPO" Type="nvarchar" MaxLength="5" Nullable="false" />
           <Property Name="TSOL_ID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TIPOSOC" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="TSOL_XG">
+          <Key>
+            <PropertyRef Name="SOCIEDAD_ID" />
+            <PropertyRef Name="TSOL_TIPO" />
+          </Key>
+          <Property Name="SOCIEDAD_ID" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="TSOL_TIPO" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ACTIVO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TSOLT">
           <Key>
@@ -5246,6 +5270,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <EntitySet Name="CONTACTOC" EntityType="Self.CONTACTOC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="COUNTRIES" EntityType="Self.COUNTRIES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CUENTA" EntityType="Self.CUENTA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CUENTAA" EntityType="Self.CUENTAA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CUENTAGL" EntityType="Self.CUENTAGL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DELEGAR" EntityType="Self.DELEGAR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DET_AGENTE" EntityType="Self.DET_AGENTE" Schema="dbo" store:Type="Tables" />
@@ -5352,6 +5377,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <EntitySet Name="TSOL_GROUP" EntityType="Self.TSOL_GROUP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOL_GROUPT" EntityType="Self.TSOL_GROUPT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOL_TREE" EntityType="Self.TSOL_TREE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TSOL_XG" EntityType="Self.TSOL_XG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOLT" EntityType="Self.TSOLT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOPORTE" EntityType="Self.TSOPORTE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TSOPORTET" EntityType="Self.TSOPORTET" Schema="dbo" store:Type="Tables" />
@@ -8640,6 +8666,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <Property Name="DESCRIPCION" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ID_PADRE" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="TIPO_PADRE" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="TIPOSOC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TSOL_GROUPT">
           <Key>
@@ -8661,6 +8688,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <Property Name="TSOL_GROUP_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TSOL_GROUP_TIPO" Type="String" MaxLength="5" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TSOL_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TIPOSOC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TSOLT">
           <Key>
@@ -12846,6 +12874,8 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
           <EntitySet Name="NEGOCIACION2" EntityType="TAT001Model.NEGOCIACION2" />
+          <EntitySet Name="CUENTAAs" EntityType="TAT001Model.CUENTAA" />
+          <EntitySet Name="TSOL_XG" EntityType="TAT001Model.TSOL_XG" />
         </EntityContainer>
         <ComplexType Name="CPS_LISTA_CITIES_Result">
           <Property Type="Int64" Name="ID" Nullable="false" />
@@ -13410,6 +13440,28 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <Property Name="DIA_MES" Type="Int32" />
           <Property Name="ORDINAL_MES" Type="Int32" />
           <Property Name="ORDINAL_DSEMANA" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CUENTAA">
+          <Key>
+            <PropertyRef Name="SOCIEDAD_ID" />
+            <PropertyRef Name="CLAVE" />
+            <PropertyRef Name="CUENTA_ID" />
+          </Key>
+          <Property Name="SOCIEDAD_ID" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="CLAVE" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="CUENTA_ID" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="NOMBRE1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="NOMBRE2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ACTIVO" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="TSOL_XG">
+          <Key>
+            <PropertyRef Name="SOCIEDAD_ID" />
+            <PropertyRef Name="TSOL_TIPO" />
+          </Key>
+          <Property Name="SOCIEDAD_ID" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="true" />
+          <Property Name="TSOL_TIPO" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ACTIVO" Type="Boolean" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -15335,6 +15387,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <EntitySetMapping Name="TSOL_GROUP">
             <EntityTypeMapping TypeName="TAT001Model.TSOL_GROUP">
               <MappingFragment StoreEntitySet="TSOL_GROUP">
+                <ScalarProperty Name="TIPOSOC" ColumnName="TIPOSOC" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="TIPO" ColumnName="TIPO" />
                 <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
@@ -15356,6 +15409,7 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
           <EntitySetMapping Name="TSOL_TREE">
             <EntityTypeMapping TypeName="TAT001Model.TSOL_TREE">
               <MappingFragment StoreEntitySet="TSOL_TREE">
+                <ScalarProperty Name="TIPOSOC" ColumnName="TIPOSOC" />
                 <ScalarProperty Name="TSOL_GROUP_ID" ColumnName="TSOL_GROUP_ID" />
                 <ScalarProperty Name="TSOL_GROUP_TIPO" ColumnName="TSOL_GROUP_TIPO" />
                 <ScalarProperty Name="TSOL_ID" ColumnName="TSOL_ID" />
@@ -16505,6 +16559,27 @@ warning 6002: The table/view 'TAT004.dbo.WARNINGV' does not have a primary key d
                 <ScalarProperty Name="FINICIO" ColumnName="FINICIO" />
                 <ScalarProperty Name="TITULO" ColumnName="TITULO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CUENTAAs">
+            <EntityTypeMapping TypeName="TAT001Model.CUENTAA">
+              <MappingFragment StoreEntitySet="CUENTAA">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+                <ScalarProperty Name="NOMBRE2" ColumnName="NOMBRE2" />
+                <ScalarProperty Name="NOMBRE1" ColumnName="NOMBRE1" />
+                <ScalarProperty Name="CUENTA_ID" ColumnName="CUENTA_ID" />
+                <ScalarProperty Name="CLAVE" ColumnName="CLAVE" />
+                <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TSOL_XG">
+            <EntityTypeMapping TypeName="TAT001Model.TSOL_XG">
+              <MappingFragment StoreEntitySet="TSOL_XG">
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+                <ScalarProperty Name="TSOL_TIPO" ColumnName="TSOL_TIPO" />
+                <ScalarProperty Name="SOCIEDAD_ID" ColumnName="SOCIEDAD_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

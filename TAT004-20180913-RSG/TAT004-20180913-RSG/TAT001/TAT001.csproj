@@ -460,6 +460,9 @@
     <Compile Include="Entities\CUENTA.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CUENTAA.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CUENTAGL.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -811,6 +814,9 @@
     <Compile Include="Entities\TSOL_TREE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\TSOL_XG.cs">
+      <DependentUpon>TAT001.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TSOPORTE.cs">
       <DependentUpon>TAT001.tt</DependentUpon>
     </Compile>
@@ -892,7 +898,6 @@
     <Compile Include="Filters\LoginActiveFilter.cs" />
     <Compile Include="Models\AlertaViewModel.cs" />
     <Compile Include="Models\ArchivoC.cs" />
-    <Compile Include="Models\ArchivoContable2.cs" />
     <Compile Include="Models\Calendario445ViewModel.cs" />
     <Compile Include="Models\CargaMasivaModels.cs" />
     <Compile Include="Models\CartaD.cs" />

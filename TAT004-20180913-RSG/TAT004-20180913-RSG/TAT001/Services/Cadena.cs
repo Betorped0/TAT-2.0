@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace TAT001.Services
@@ -48,6 +49,14 @@ namespace TAT001.Services
                 return m;
             }
             return m;
+        }
+        public string concatena(string cade, string entry)
+        {
+            StringBuilder cadena = new StringBuilder();
+            cadena.Insert(0, cade);
+            cadena.Insert(cadena.Length, entry);
+
+            return cadena.ToString();
         }
     }
 }

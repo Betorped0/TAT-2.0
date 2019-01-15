@@ -17,5 +17,6 @@ namespace TAT001.Entities
         public string TSOL_GROUP_ID { get; set; }
         public string TSOL_GROUP_TIPO { get; set; }
         public string TSOL_ID { get; set; }
+        public string TIPOSOC { get; set; }
     }
 }
