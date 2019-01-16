@@ -633,8 +633,8 @@ namespace TAT001.ControllersE
 
             string usuariotextos = "";//B20180801 MGC Textos
 
-            using (TAT001Entities db = new TAT001Entities())
-            {
+            ////using (TAT001Entities db = new TAT001Entities())
+            ////{
                 string pais_id = "";
                 string sociedad_id = "";
                 string u = User.Identity.Name;
@@ -1380,7 +1380,7 @@ namespace TAT001.ControllersE
                 }
 
 
-            }//RSG 13.06.2018
+            ////}//RSG 13.06.2018
             Calendario445 cal = new Calendario445();
             d.PERIODO = cal.getPeriodo(DateTime.Now);
             d.EJERCICIO = cal.getEjercicio(DateTime.Now) + "";
