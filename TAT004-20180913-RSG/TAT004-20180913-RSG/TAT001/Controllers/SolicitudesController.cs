@@ -238,7 +238,7 @@ namespace TAT001.ControllersE
             }
             if (numFiles > 0)
             {
-                string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                 //Crear el directorio
                 DOCUMENTO du = db.DOCUMENTOes.Find(num_doc);//RSG 01.08.2018
                 ////var dir = createDir(url, num_doc.ToString());
@@ -2615,7 +2615,7 @@ namespace TAT001.ControllersE
                         if (numFiles > 0)
                         {
                             //Obtener las variables con los datos de sesión y ruta
-                            string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                            string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                             //Crear el directorio
                             Log.Info("---Solicitudes-Create-Soporte-save---");
                             var dir = "";
@@ -5624,7 +5624,7 @@ namespace TAT001.ControllersE
                 if (numFiles > 0)
                 {
                     //Obtener las variables con los datos de sesión y ruta
-                    string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                    string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                     //Crear el directorio
 
                     //var dir = createDir(url, dOCUMENTO.NUM_DOC.ToString());
@@ -7503,7 +7503,7 @@ namespace TAT001.ControllersE
             {
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
-                    string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                    string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                     HttpPostedFileBase file = Request.Files[i];
                     string filename = file.FileName;
                     //res = SaveFile(file, url, "100", out error, out path);//RSG 01.08.2018

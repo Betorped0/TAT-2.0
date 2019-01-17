@@ -4364,7 +4364,7 @@ namespace TAT001.Controllers
 
                 if (numFiles > 0)
                 {
-                    string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                    string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                     //string url = "C:\\Users\\EQUIPO\\Desktop\\Nueva carpeta\\";
                     var dir = new Files().createDir(url, num_doc.ToString(), DateTime.Now.Year.ToString());
 

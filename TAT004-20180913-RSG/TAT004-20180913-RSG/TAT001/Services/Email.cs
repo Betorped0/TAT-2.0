@@ -34,11 +34,11 @@ namespace TAT001.Services
 
                         var workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
 
-                        string mailt = ConfigurationManager.AppSettings["mailt"];
-                        string mtest = ConfigurationManager.AppSettings["mailtest"]; //B20180803 MGC Correos
+                        string mailt = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mail")).FirstOrDefault().VALUE;
+                        string mtest = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailTest")).FirstOrDefault().VALUE;
                         string mailTo = "";
                         if (mtest == "X")
-                            mailTo = "rogelio.sanchez@sf-solutionfactory.com"; //B20180803 MGC Correos
+                            mailTo = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailAdmin")).FirstOrDefault().VALUE;
                         else
                         {
                             if (pos == null)
@@ -126,12 +126,12 @@ namespace TAT001.Services
 
             try
             {
-                string mailt = ConfigurationManager.AppSettings["mailt"];
-                string mtest = ConfigurationManager.AppSettings["mailtest"]; //B20180803 MGC Correos
+                string mailt = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mail")).FirstOrDefault().VALUE;
+                string mtest = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailTest")).FirstOrDefault().VALUE;
                 string mailTo = "";
 
                 if (mtest == "X")
-                    mailTo = "rogelio.sanchez@sf-solutionfactory.com"; //B20180803 MGC Correos
+                    mailTo = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailAdmin")).FirstOrDefault().VALUE;
                 else
                     mailTo = usuInf2.EMAIL;
 

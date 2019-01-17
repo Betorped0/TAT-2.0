@@ -94,12 +94,12 @@ namespace TAT001.Controllers
                                                     & a.KUNNR.Equals(dOCUMENTO.PAYER_ID)).First();
             var workflow = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id)).OrderByDescending(a => a.POS).FirstOrDefault();
             //ViewBag.acciones = db.FLUJOes.Where(a => a.NUM_DOC.Equals(id) & a.ESTATUS.Equals("P") & a.USUARIOA_ID.Equals(User.Identity.Name)).FirstOrDefault();
-
-            string mailt = ConfigurationManager.AppSettings["mailt"];
-            string mtest = ConfigurationManager.AppSettings["mailtest"];
+            
+            string mailt = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mail")).FirstOrDefault().VALUE;
+            string mtest = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailTest")).FirstOrDefault().VALUE;
             string mailTo = "";
             if (mtest == "X")
-                mailTo = "rogelio.sanchez@sf-solutionfactory.com";
+                mailTo = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailAdmin")).FirstOrDefault().VALUE;
             else
                 mailTo = workflow.USUARIO.EMAIL;
 

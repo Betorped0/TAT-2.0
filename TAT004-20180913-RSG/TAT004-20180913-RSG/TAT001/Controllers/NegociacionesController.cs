@@ -269,11 +269,11 @@ namespace TAT001.Controllers
             ////smtp.Credentials = new NetworkCredential("lejgg017@gmail.com", "24abril14");
             ////smtp.EnableSsl = true;
 
-            string mailt = ConfigurationManager.AppSettings["mailt"];
-            string mtest = ConfigurationManager.AppSettings["mailtest"];
+            string mailt = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mail")).FirstOrDefault().VALUE;
+            string mtest = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailTest")).FirstOrDefault().VALUE;
             string mailTo = "";
             if (mtest == "X")
-                mailTo = "rogelio.sanchez@sf-solutionfactory.com";
+                mailTo = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("mailAdmin")).FirstOrDefault().VALUE;
             else
                 mailTo = correo;
             CONMAIL conmail = db.CONMAILs.Find(mailt);

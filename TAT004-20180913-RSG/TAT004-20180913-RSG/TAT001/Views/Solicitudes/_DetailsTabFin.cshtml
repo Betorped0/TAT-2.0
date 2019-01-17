@@ -1,6 +1,9 @@
 ﻿@model TAT001.Models.DocumentoFlujo
 @using TAT001.Entities
 <div id="fina" class="col s12">
+    <script>
+        var clearingV = "";
+    </script>
     <div class="row">
         <div class="col s12 m12 l12">
             @if (ViewBag.acciones != null)
@@ -129,7 +132,7 @@
                                             for (var i = 0; i < pp.length; i++) {
                                                 var cod = pp[i].IMPUESTO_ID;
                                                 var por = pp[i].PORC;
-                                                var tot = @Model.D.MONTO_DOC_ML;
+                                                var tot = @Model.D.MONTO_DOC_ML ;
                                     var sub = tot * por / 100;
 
                                     $("#tab_conc tbody").append("<tr><td>" + pp[i].TEXT + "</td><td>" + toShow(por / 100) + "%</td><td>" + cod + "</td><td>" + toShow(sub) + "</td><tr>");
@@ -154,9 +157,9 @@
                 <div class="row" style="margin-bottom:0">
                     <div class="input-field col s8">
                         @*@if (ViewBag.accion == "N")
-                        {
-                            @Html.EditorFor(model => model.D.MONTO_DOC_MD)
-                        }*@
+                            {
+                                @Html.EditorFor(model => model.D.MONTO_DOC_MD)
+                            }*@
                         @Html.EditorFor(model => model.D.MONTO_DOC_MD, new { htmlAttributes = new { @disabled = "disabled", @class = "precio" } })
                         @Html.LabelFor(model => model.D.MONTO_DOC_MD, "Monto", new { @id = "lbl_montomd" })
                     </div>
@@ -306,7 +309,7 @@
         <div class="col s12 m6 l6">
             @using (TAT001Entities db = new TAT001Entities())
             {
-                List<DOCUMENTO>inf =  db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
+                List<DOCUMENTO> inf = db.DOCUMENTOes.Where(x => x.DOCUMENTO_REF == Model.D.NUM_DOC).ToList();
                 <div class="card-panel">
                     <div class="row" style="overflow:auto;">
                         <h5 id="headRela">Relacionados</h5>
@@ -335,7 +338,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (Model.D.TSOL.REVERSO && db.DOCUMENTOes.Any(x => x.NUM_DOC == Model.D.DOCUMENTO_REF))    
+                                    @if (Model.D.TSOL.REVERSO && db.DOCUMENTOes.Any(x => x.NUM_DOC == Model.D.DOCUMENTO_REF))
                                     {
                                         DOCUMENTO docProv = db.DOCUMENTOes.First(x => x.NUM_DOC == Model.D.DOCUMENTO_REF);
                                         <tr>
@@ -559,7 +562,6 @@
                                 </div>
                             </div>
                             <script>
-                                var clearingV = "";
                                     selConcepto(document.getElementById("txt_concepto").value);
 
                                     function selConcepto(value) {
@@ -633,7 +635,6 @@
         {
             if (ViewBag.Relacionados.Count > 0)
             {
-
                 <div class="col s12 m6 l6">
                     <div class="card-panel">
                         <h5>Relacionados</h5>
@@ -645,8 +646,8 @@
                                             <th>Documento</th>
                                             <th>Tipo Solicitud</th>
                                             @*
-                                            <th>Fecha</th>
-                                            <th>Hora</th>*@
+                                                <th>Fecha</th>
+                                                <th>Hora</th>*@
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -661,12 +662,12 @@
                                                     @item.TSOL.TSOLTs.Where(a => a.SPRAS_ID.Equals(ViewBag.spras_id)).FirstOrDefault().TXT50
                                                 </td>
                                                 @*
-                                                <td>
-                                                @item.FECHAC.Value.ToShortDateString()
-                                                </td>
-                                                <td>
-                                                @item.HORAC.Value.ToString().Split('.')[0]
-                                                </td>*@
+                                                    <td>
+                                                    @item.FECHAC.Value.ToShortDateString()
+                                                    </td>
+                                                    <td>
+                                                    @item.HORAC.Value.ToString().Split('.')[0]
+                                                    </td>*@
                                                 <td>
                                                     <a href="@Url.Action("Details", new { id = item.NUM_DOC })" class="btn-small">Ver</a>
                                                 </td>

@@ -305,16 +305,16 @@ function cuentasPorTSol(tsol_id, monto, isReverso) {
     var div = "<ul class='collection'><li class='collection-item'>";
     if (isReverso) {
         monto = toShow(monto, $('#dec').val());
-        div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + clearingV + "</span></div></div>";
+        div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + monto + "</span></div></div>";
         div += "</li><li class='collection-item'>";
-        div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + clearingV + "</span></div></div></div>";
+        div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + monto + "</span></div></div></div>";
 
     } else {
         if (tsol_id.indexOf(prov) === 0) {
             monto = toShow(monto, $('#dec').val());
-            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + clearingV + "</span></div></div>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_abono + "</div><div class='col s3'>" + clearing.ABONO + "</div><div class='col s4'>" + clearing.NOMBREA + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + monto + "</span></div></div>";
             div += "</li><li class='collection-item'>";
-            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + clearingV + "</span></div></div></div>";
+            div += "<div class='row' style='margin-bottom:0;'><div class='col s2'>" + tex_cargo + "</div><div class='col s3'>" + clearing.CARGO + "</div><div class='col s4'>" + clearing.NOMBREC + "</div><div class='col s3 right-align'><span id='txt_clearing'>" + monto + "</span></div></div></div>";
 
         } else if (tsol_id.indexOf(nci) === 0) {
             var kunnr = $("#payer_id").val(),

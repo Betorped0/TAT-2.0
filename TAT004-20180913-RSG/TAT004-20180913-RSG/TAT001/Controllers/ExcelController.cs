@@ -1269,7 +1269,7 @@ namespace TAT001.Controllers
             if (numFiles > 0)
             {
                 //Obtener las variables con los datos de sesión y ruta
-                string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                 //Crear el directorio
                 string nomNum = numDoc.ToString();
                 var dir = sc.createDir(url, nomNum, DateTime.Now.Year.ToString());

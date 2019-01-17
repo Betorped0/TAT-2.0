@@ -1096,7 +1096,7 @@ namespace TAT001.Controllers
                     if (numFiles > 0)
                     {
                         //Obtener las variables con los datos de sesión y ruta
-                        string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                        string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                         //Crear el directorio
                         var dir = createDir(url, dOCUMENTO.NUM_DOC.ToString());
 
@@ -2756,7 +2756,7 @@ namespace TAT001.Controllers
             {
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
-                    string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                    string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                     HttpPostedFileBase file = Request.Files[i];
                     string filename = file.FileName;
                     res = SaveFile(file, url, "100", out error, out path);
@@ -3429,7 +3429,7 @@ namespace TAT001.Controllers
 
                 string fileExt = System.IO.Path.GetExtension(file.FileName);
                 string nombreV = file.FileName;
-                string url = ConfigurationManager.AppSettings["URL_SAVE"];
+                string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                 string nomNum = id.ToString();
                 var dir = sc.createDir(url, nomNum, DateTime.Now.Year.ToString());
                 if (dir.Equals(""))

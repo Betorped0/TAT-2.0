@@ -64,6 +64,7 @@ namespace TAT001.Models
 
                 ////string txt = "";
                 string msj = "";
+                string url = db.APPSETTINGs.Where(x => x.NOMBRE.Equals("filePath") && x.ACTIVO).FirstOrDefault().VALUE;
                 ////string[] cc;
                 string cta = "";
                 if (doc.DOCUMENTO_REF == null && doc.TSOL_ID == "NC")
@@ -83,19 +84,19 @@ namespace TAT001.Models
 
                 if (tab.TIPO_DOC == "RN" || tab.TIPO_DOC == "KR")
                 {
-                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-2-" + contdoc + ".txt";
+                    dirFile = url + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-2-" + contdoc + ".txt";
                 }
                 else if (tab.TIPO_DOC == "KG")
                 {
-                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-3-" + contdoc + ".txt";
+                    dirFile = url + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-3-" + contdoc + ".txt";
                 }
                 else if (tab.TIPO_SOL == "NCM")
                 {
-                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-"+ contdoc + "fact" + pos + ".txt";
+                    dirFile = url + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-"+ contdoc + "fact" + pos + ".txt";
                 }
                 else
                 {
-                    dirFile = ConfigurationManager.AppSettings["URL_SAVE"] + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-" + contdoc + ".txt";
+                    dirFile = url + @"POSTING\INBOUND_" + tab.TIPO_SOL.Substring(0, 2) + docum.ToString().PadLeft(10, '0') + "-1-" + contdoc + ".txt";
                 }
                 cta = doc.GALL_ID;
                 doc.GALL_ID = db.GALLs.Where(x => x.ID == doc.GALL_ID).Select(x => x.GRUPO_ALL).Single();
