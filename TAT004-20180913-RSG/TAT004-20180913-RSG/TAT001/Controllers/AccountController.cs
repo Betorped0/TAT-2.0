@@ -171,8 +171,10 @@ namespace TAT001.Controllers
                             //Hay que revisar las posibilidades de error
                         }
                     }
+
                     USUARIOLOG usuLog2 = new USUARIOLOG();
-                    Session["userlog"] = usuLog2;
+                    Session["userlog"] = new USUARIOLOG();
+
                     return Redirect(returnUrl);
                 }
                 return RedirectToAction("Index", "Home");
