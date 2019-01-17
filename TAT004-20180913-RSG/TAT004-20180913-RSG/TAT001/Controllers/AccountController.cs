@@ -173,6 +173,7 @@ namespace TAT001.Controllers
                     }
 
                     USUARIOLOG usuLog2 = new USUARIOLOG();
+                    Session["userlog"] = null;
                     Session["userlog"] = new USUARIOLOG();
 
                     return Redirect(returnUrl);
@@ -228,7 +229,7 @@ namespace TAT001.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
+        [AllowAnonymous]
         public ActionResult validateLoginView(string USUARIO_ID, string returnUrl)
         {
             ////int pagina = 221; //ID EN BASE DE DATOS
