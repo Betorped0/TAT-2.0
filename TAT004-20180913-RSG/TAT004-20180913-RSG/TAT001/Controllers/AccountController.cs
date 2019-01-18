@@ -231,7 +231,7 @@ namespace TAT001.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-        [AllowAnonymous]
+
         public ActionResult validateLoginView(string USUARIO_ID, string returnUrl)
         {
             ////int pagina = 221; //ID EN BASE DE DATOS
