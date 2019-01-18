@@ -147,7 +147,7 @@ namespace TAT001.Controllers
                                 usuLog.LOGIN = true;
                                 db.USUARIOLOGs.Add(usuLog);
                                 db.SaveChanges();
-                                Session["userlog"] = usuLog;
+                                ////Session["userlog"] = usuLog;
                                 return Redirect(returnUrl);
                             }
                             else
@@ -172,9 +172,9 @@ namespace TAT001.Controllers
                         }
                     }
 
-                    USUARIOLOG usuLog2 = new USUARIOLOG();
-                    Session["userlog"] = null;
-                    Session["userlog"] = new USUARIOLOG();
+                    ////USUARIOLOG usuLog2 = new USUARIOLOG();
+                    ////Session["userlog"] = null;
+                    ////Session["userlog"] = new USUARIOLOG();
 
                     return Redirect(returnUrl);
                 }
@@ -209,10 +209,12 @@ namespace TAT001.Controllers
 
                 if (!us)
                 {
-                    usu = (USUARIOLOG)Session["userlog"];
+                    ////usu = (USUARIOLOG)Session["userlog"];
+                    usu.SESION = System.Web.HttpContext.Current.Session.SessionID;
+
                     if (usu != null)
                     {
-                        var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == usu.USUARIO_ID);
+                        var checkUser = db.USUARIOLOGs.SingleOrDefault(x => x.USUARIO_ID == User.Identity.Name);
                         if (checkUser != null)
                             if (checkUser.SESION == System.Web.HttpContext.Current.Session.SessionID)
                             {
@@ -261,7 +263,7 @@ namespace TAT001.Controllers
                 {
                     db.Entry(uSUARIOLOG).State = EntityState.Modified;
                     db.SaveChanges();
-                    Session["userlog"] = uSUARIOLOG;
+                    ////Session["userlog"] = uSUARIOLOG;
                 }
                 catch {
                     //Tal vez hay error en la conexión
